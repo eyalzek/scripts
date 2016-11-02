@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+import argparse
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("env", help="env name to fetch")
+    parser.add_argument("--host", help="hosts to fetch")
+    args = parser.parse_args()
+
+    with open("/home/eyal/.ssh/config", "r") as f:
+        config = f.read().split("\n")
+
+    hosts = [host.replace("Host ", "") for host in config if args.env in host]
+    if args.host:
+        hosts = filter(lambda h: ".%s" % args.host in h, hosts)
+
+    for host in hosts:
+        print(host)
+
+if __name__ == "__main__":
+    main()
